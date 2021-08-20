@@ -15,6 +15,8 @@
   - [SSH 接続](#ssh-接続)
   - [アップデート](#アップデート)
   - [初期設定](#初期設定)
+    - [ウィザードで設定する場合](#ウィザードで設定する場合)
+    - [コマンドで設定する場合](#コマンドで設定する場合)
   - [IP アドレスを固定](#ip-アドレスを固定)
 
 <!-- /TOC -->
@@ -138,8 +140,45 @@ $ sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt
 
 ロケールなどを設定
 
+<a id="markdown-ウィザードで設定する場合" name="ウィザードで設定する場合"></a>
+
+### ウィザードで設定する場合
+
 ```sh
 $ sudo raspi-config
+```
+
+<a id="markdown-コマンドで設定する場合" name="コマンドで設定する場合"></a>
+
+### コマンドで設定する場合
+
+```sh
+# ホスト名
+$ sudo raspi-config nonint do_hostname NEW_HOSTNAME
+
+# ロケール等
+$ sudo raspi-config nonint do_change_locale ja_JP.UTF-8
+$ sudo raspi-config nonint do_change_timezone Asia/Tokyo
+$ sudo raspi-config nonint do_configure_keyboard jp
+$ sudo raspi-config nonint do_wifi_country JP
+
+# 解像度
+$ sudo raspi-config nonint do_resolution 800 600
+
+# I2C ON
+sudo raspi-config nonint do_i2c 0
+# I2C OFF
+sudo raspi-config nonint do_i2c 1
+
+# カメラ ON
+$ sudo raspi-config nonint do_camera 0
+# カメラ OFF
+$ sudo raspi-config nonint do_camera 1
+
+# VNC ON
+$ sudo raspi-config nonint do_vnc 0
+# VNC OFF
+$ sudo raspi-config nonint do_vnc 1
 ```
 
 <a id="markdown-ip-アドレスを固定" name="ip-アドレスを固定"></a>
