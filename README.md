@@ -13,6 +13,7 @@
     - [コマンド](#コマンド)
   - [Raspberry Pi を起動](#raspberry-pi-を起動)
   - [SSH 接続](#ssh-接続)
+    - [PowerShell](#powershell)
   - [アップデート](#アップデート)
   - [初期設定](#初期設定)
     - [ウィザードで設定する場合](#ウィザードで設定する場合)
@@ -125,6 +126,35 @@ $ ssh pi@192.168.0.XX
 ```
 
 ユーザー名・初期パスワードは `pi` `raspberry`
+
+<a id="markdown-powershell" name="powershell"></a>
+
+### PowerShell
+
+```powershell
+$privateipaddr = [system.net.dns]::GetHostAddresses((hostname)) | Where-Object {
+    $_.AddressFamily -eq "InterNetwork"
+} | select -ExpandProperty IPAddressToString
+$p1, $p2, $p3, $p4 = $privateipaddr.Split(".")
+
+for ($i = 0; $i -lt 256; $i++) {
+    $targetipaddr = "{0}.{1}.{2}.{3}" -f $p1, $p2, $p3, $i
+    ping -n 1 $targetipaddr
+}
+
+arp -a | Select-String "b8-27-eb-" | ForEach-Object {
+    [RegEx]::Matches($_, "[0-9]+[.][0-9]+[.][0-9]+[.][0-9]+") | ForEach-Object {
+        $raspiipaddr = $_.Value
+        start ssh "pi@$raspiipaddr"
+    }
+}
+arp -a | Select-String "dc-a6-32-" | ForEach-Object {
+    [RegEx]::Matches($_, "[0-9]+[.][0-9]+[.][0-9]+[.][0-9]+") | ForEach-Object {
+        $raspiipaddr = $_.Value
+        start ssh "pi@$raspiipaddr"
+    }
+}
+```
 
 <a id="markdown-アップデート" name="アップデート"></a>
 
